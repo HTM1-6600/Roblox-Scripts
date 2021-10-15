@@ -1,0 +1,25 @@
+local Material = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/MaterialLua/master/Module.lua"))()
+
+local UI = Material.Load({
+     Title = "CheaterMAD Hub",
+     Style = 24,
+     SizeX = 500,
+     SizeY = 200,
+     Theme = "Dark"
+})
+
+local Page = UI.New({
+    Title = "All Star Def",
+
+
+})
+
+Page.Button({
+    Text = "All Star Def",
+    Callback = function()
+       loadstring(game:HttpGet("http://assasine.com/Scripts/All%20Star%20Tower%20Defense.lua", true))()
+
+
+
+    end
+})
