@@ -1,0 +1,13 @@
+--- Setting Theme
+getgenv().SettingTheme = {
+    Tab = {
+        Left_Color = Color3.fromRGB(203 ,156, 255),
+        Right_Color = Color3.fromRGB(140, 166 ,252)
+    },
+    Button = {
+        Left_Color = Color3.fromRGB(203 ,156, 255),
+        Right_Color = Color3.fromRGB(140, 166 ,252)
+    },
+}
+--- Script Body
+loadstring(game:HttpGet("http://skyhubking.xyz/script/free_script/SKYHUB__A/ScriptHub.lua"))()

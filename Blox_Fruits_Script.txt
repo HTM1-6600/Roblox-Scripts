@@ -1,0 +1,4 @@
+-- Downloaded From : myrobloxscripts.com
+-- Credits : Meehub
+
+loadstring(game:HttpGet("https://textbin.net/raw/5gnw3bxczg", true))()

@@ -1,0 +1,5 @@
+local Classes = {"Alchemist", "Engineer", "Cultist", "Transcendent", "Alpha", "Paladin", "Wizard", "Gambler", "Tactician", "Ninja", "Ranger", "Elementalist"}
+
+for i,v in pairs(Classes) do
+game.ReplicatedStorage.ClassPurchaseEvent:FireServer(v, 1)
+end

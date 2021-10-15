@@ -1,0 +1,219 @@
+local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/Maxgat5/UiLib/main/lua')))()
+local w = library:CreateWindow("Claw Simulator")
+local b = w:CreateFolder("AutoFarm")
+local f = w:CreateFolder("AutoBuy")
+local e = w:CreateFolder("Mix")
+local u = w:CreateFolder("Credits")
+Selectedareas1 = "1"
+Selectedmonsters1 = "1"
+monsters = {}
+areas = {}
+for i,v in pairs(game:GetService("Workspace").Monster:GetChildren()) do
+    if not string.find(v.Name,"H") then
+        a = string.gsub(v.Name,"Monster_","")
+        b1 = a:sub(1, #a -2)
+        monster = b1:sub(1,1)
+        if not table.find(monsters,monster) then
+            table.insert(monsters,monster)
+        end
+        area = b1:sub(#b1,-1)
+        if not table.find(areas,area) then
+            table.insert(areas,area)
+        end
+    end
+end
+SelectedArea = "Step1"
+AreasTrain = {}
+for i,v in pairs(game:GetService("Workspace").Training:GetChildren()) do
+    if not table.find(AreasTrain,v.Name) then
+        table.insert(AreasTrain,v.Name)
+    end
+end
+SelectedTrain = "1"
+Train = {}
+for i,v in pairs(game:GetService("Workspace").Training:GetChildren()) do
+    for i1,v1 in pairs(v:GetChildren()) do
+        if string.find(v1.Name,"Training") then
+            a = string.gsub(v1.Name,"Training","")
+            if not table.find(Train,a) then
+                table.insert(Train,a)
+            end
+        end
+    end
+end
+
+b:Dropdown("Select Area",AreasTrain,true,function(a)
+    SelectedAreaTrain = a
+end)
+
+b:Dropdown("Select Train",Train,true,function(a)
+    SelectedTrain = a
+end)
+
+b:Toggle("AutoTrain",function(bool)
+    shared.toggle = bool
+    AutoTrain = bool
+end)
+
+b:Dropdown("Select Area",areas,true,function(a)
+    Selectedareas1 = a
+end)
+
+b:Dropdown("Select Monster",monsters,true,function(a)
+    Selectedmonsters1 = a
+end)
+
+
+b:Toggle("AutoMonster",function(bool)
+    shared.toggle = bool
+    AutoMonster = bool
+end)
+
+b:Toggle("AutoQuest",function(bool)
+    shared.toggle = bool
+    AutoQuest = bool
+end)
+
+b:Toggle("AutoTap",function(bool)
+    shared.toggle = bool
+    AutoTap = bool
+end)
+
+f:Toggle("AutoUpgrade",function(bool)
+    shared.toggle = bool
+    AutoUpgrade = bool
+end)
+
+e:Toggle("AntiAfk",function(bool)
+    shared.toggle = bool
+    AntiAfk = bool
+end)
+
+e:Toggle("Speed",function(bool)
+    shared.toggle = bool
+    Speed = bool
+end)
+
+e:Button("Rejoin",function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId,game:GetService("Players").LocalPlayer)
+end)
+--Credits
+u:Button(game:service("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Maxgat5/Decode/main/JSON")).username,function()
+    setclipboard(game:service("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Maxgat5/Decode/main/JSON")).username)
+end)
+ 
+u:Button("Discord Server",function()
+    setclipboard(game:service("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Maxgat5/Decode/main/JSON")).discord)
+end)
+
+game:GetService('RunService').Stepped:connect(function()
+    spawn(function()
+        if AntiAfk == true then
+            local bb=game:service'VirtualUser'
+            bb:CaptureController()
+            bb:ClickButton2(Vector2.new())
+        end
+    end)
+end)
+
+spawn(function()
+    while wait() do
+        if AutoTrain == true then
+            pcall(function()
+                for i,v in pairs(game:GetService("Workspace").Training[SelectedArea]["Training"..SelectedTrain]:GetChildren()) do
+                    pcall(function()
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.CFrame.Position + Vector3.new(0,0,0))
+                        game:GetService("ReplicatedStorage").RemoteEvent:FireServer({"AttackClick"})
+                    end)
+                end
+            end)
+        end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        if AutoMonster == true then
+            function ClosestPart()
+                local dist = math.huge
+                local target = nil
+                for i,v in pairs(game:GetService("Workspace").Monster:GetChildren()) do
+                    if not string.find(v.Name,"H") then
+                        a = string.gsub(v.Name,"Monster_","")
+                        b1 = a:sub(1, #a -2)
+                        monster = b1:sub(1,1)
+                        area = b1:sub(#b1,-1)
+                        if monster == Selectedmonsters1 then
+                            if area == Selectedareas1 then
+                                local magnitude = (v.HumanoidRootPart.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
+                                if magnitude < dist then
+                                    dist = magnitude
+                                    target = v.HumanoidRootPart
+                                end
+                            end
+                        end
+                    end
+                end
+                return target
+            end
+            pcall(function()
+                local magnitude = (ClosestPart().Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
+                if magnitude < 5 then
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").RemoteEvent:FireServer({"AttackClick"})
+                    end)
+                end
+                if magnitude < 999999 and magnitude > 5 then
+                    pcall(function()
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(ClosestPart().CFrame.Position + Vector3.new(0,0,-1))
+                    end)
+                end
+            end)
+        end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        if AutoQuest == true then
+            for i=1,30 do
+                game:GetService("ReplicatedStorage").RemoteEvent:FireServer({"ClaimReward",i})
+            end
+        end
+    end
+end)
+
+
+spawn(function()
+    while wait() do
+        if AutoUpgrade == true then
+            game:GetService("ReplicatedStorage").RemoteEvent:FireServer({"BuyTrainingMultipiler"})
+        end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        if AutoTap == true then
+            for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui["Main_Gui"]:GetChildren()) do
+                if v.Name == "GivePower_Frame" then
+                    firesignal(v.Img.Activated)
+                end
+            end
+        end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        if Speed == true then
+            pcall(function()
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+            end)
+        else
+            pcall(function()
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+            end)
+        end
+    end
+end)

